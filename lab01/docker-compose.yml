@@ -1,0 +1,120 @@
+version: '2'
+
+services:
+  
+  client-2:
+    build: .
+    privileged: true
+    mem_limit: 100m
+    hostname: client-2
+    container_name: client-2
+    networks:
+      service:
+      lan9:
+        ipv4_address: 9.1.0.44
+  
+  client-1:
+    build: .
+    privileged: true
+    mem_limit: 100m
+    hostname: client-1
+    container_name: client-1
+    networks:
+      service:
+      lan10:
+        ipv4_address: 10.1.0.44
+  
+
+  
+  router-1:
+    hostname: router-1
+    container_name: router-1
+    image: zmumichal/vyos
+    privileged: true
+    mem_limit: 200m
+    command: sbin/init
+    networks:
+      service:
+    # addresses are set here only in order to make sure they will be available
+    # (true address assignment is done by injected config.boot file)
+    
+      lan10:
+        ipv4_address: 10.1.0.101
+    
+      lan8:
+        ipv4_address: 8.1.0.101
+    
+  
+  router-2:
+    hostname: router-2
+    container_name: router-2
+    image: zmumichal/vyos
+    privileged: true
+    mem_limit: 200m
+    command: sbin/init
+    networks:
+      service:
+    # addresses are set here only in order to make sure they will be available
+    # (true address assignment is done by injected config.boot file)
+    
+      lan7:
+        ipv4_address: 7.1.0.102
+    
+      lan9:
+        ipv4_address: 9.1.0.102
+    
+      lan8:
+        ipv4_address: 8.1.0.102
+    
+  
+  router-3:
+    hostname: router-3
+    container_name: router-3
+    image: zmumichal/vyos
+    privileged: true
+    mem_limit: 200m
+    command: sbin/init
+    networks:
+      service:
+    # addresses are set here only in order to make sure they will be available
+    # (true address assignment is done by injected config.boot file)
+    
+      lan7:
+        ipv4_address: 7.1.0.2
+    
+  
+
+networks:
+  service:
+
+  lan7:
+    ipam:
+      config:
+      - subnet: 7.1.0.0/16
+        # default gateway will be overridden
+        # as it is bridged to the internet
+        gateway: 7.1.0.1
+
+  lan10:
+    ipam:
+      config:
+      - subnet: 10.1.0.0/16
+        # default gateway will be overridden
+        # as it is bridged to the internet
+        gateway: 10.1.0.1
+
+  lan9:
+    ipam:
+      config:
+      - subnet: 9.1.0.0/16
+        # default gateway will be overridden
+        # as it is bridged to the internet
+        gateway: 9.1.0.1
+
+  lan8:
+    ipam:
+      config:
+      - subnet: 8.1.0.0/16
+        # default gateway will be overridden
+        # as it is bridged to the internet
+        gateway: 8.1.0.1
